@@ -98,7 +98,6 @@ module.exports = (robot) ->
 				body = body.replace /\n+$/, ''
 
 				body = processBodyJson body
-				body = processErrors res, body
 
 				end = Date.now()
 				diff = end - start
