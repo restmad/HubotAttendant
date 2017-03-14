@@ -15,43 +15,6 @@ setUserName = (res, name) ->
 	,
 		_id: res.envelope.room
 
-incErrors = (res) ->
-	errors = res.robot.brain.get('errors_'+res.envelope.room) or 0
-	errors++
-	res.robot.brain.set('errors_'+res.envelope.room, errors)
-	return errors
-
-clearErrors = (res) ->
-	res.robot.brain.set('errors_'+res.envelope.room, 0)
-
-processErrors = (res, message) ->
-	switch message
-		when 'Desculpe mas não entendi, pode ser mais especifico?'
-			errors = incErrors res
-			switch errors
-				when 1
-					return 'Desculpa, não entendi bem o que você quis dizer, você pode ser mais especifico?'
-				when 2
-					return 'Ah, legal, eu não sei sobre isso não. Eu já estudei sobre o ProUni, sobre FIES, sei sobre conteúdos educacionais, sobre escolas e universidades. Pergunte sobre um desses temas ou se você preferir posso lhe passar para um atendente?'
-				else
-					return {
-						message: 'Estou sentindo que não estou estou conseguindo te ajudar. Vou chamar meu supervisor, aguarde só um minutinho...'
-						callback: ->
-							livechatTransferHuman res
-							clearErrors res
-					}
-		when 'pausar_bot'
-			return {
-				message: 'Ok, me de um minuto que estou adicionando um amigo humano nesta conversa...'
-				callback: ->
-					livechatTransferHuman res
-			}
-		else
-			clearErrors res
-
-	return message
-
-
 processJson = (res, json) ->
 	console.log 'json', json
 
